@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">EntregaFinalAndroid</string>
+    <string name="boton2048">Jugar a 2048</string>
+    <string name="botonGiravoltorb">Jugar a Giravoltorb</string>
+    <string name="botonPuntuaciones">Ver puntuaciones</string>
+    <string name="MensajeInicial">Batería de juegos</string>
+    <string name="botonInicioCerrarSesion">Iniciar sesión</string>
+</resources>
