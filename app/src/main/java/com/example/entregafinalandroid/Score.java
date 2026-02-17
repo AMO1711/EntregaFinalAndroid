@@ -1,18 +1,19 @@
 package com.example.entregafinalandroid;
 
 public class Score {
-    private String id, game, playerName, score, time;
+    private String id, game, playerName, score, time, timeMode;
 
     public Score (){
 
     }
 
-    public Score (String id, String game, String playerName, String score, String time){
+    public Score (String id, String game, String playerName, String score, String time, String timeMode){
         this.id = id;
         this.game = game;
         this.playerName = playerName;
         this.score = score;
         this.time = time;
+        this.timeMode = timeMode;
     }
 
     public String getId() {
@@ -53,5 +54,13 @@ public class Score {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public String getTimeMode() {
+        return timeMode;
+    }
+
+    public void setTimeMode(String timeMode) {
+        this.timeMode = timeMode;
     }
 }

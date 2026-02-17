@@ -20,6 +20,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".Game2048Activity">
+
+        </activity>
+
+        <activity android:name=".GameGiravoltorbActivity">
+
+        </activity>
+
+        <activity android:name=".ScoreActivity">
+
+        </activity>
+
     </application>
 
 </manifest>

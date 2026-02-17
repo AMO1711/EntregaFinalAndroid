@@ -3,6 +3,14 @@
     <string name="boton2048">Jugar a 2048</string>
     <string name="botonGiravoltorb">Jugar a Giravoltorb</string>
     <string name="botonPuntuaciones">Ver puntuaciones</string>
-    <string name="MensajeInicial">Batería de juegos</string>
+    <string name="MensajeInicial">Game Center</string>
     <string name="botonInicioCerrarSesion">Iniciar sesión</string>
+    <string name="texto_usuario_existente">Este usuario ya existe, introduce otro</string>
+    <string name="texto_cerrar_sesion">¿Seguro que quieres cerrar sessión?</string>
+    <string name="texto_nombre_usuario_dialog">Nombre de usuario:</string>
+    <string name="texto_contrasena_dialog">Contraseña:</string>
+    <string name="texto_nuevo_usuario_dialog">Nuevo usuario:</string>
+    <string name="texto_usuario_contrasena_incorrecto">Usuario o contraseña incorrecta. Vuelve a intentarlo</string>
+    <string name="high_score_text">High score: </string>
+    <string name="Titulo2048">2048</string>
 </resources>

@@ -2,4 +2,18 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="grey">#9E9E9E</color>
+    <color name="light_grey">#DEDEDE</color>
+    <color name="score2">#ECE2D8</color>
+    <color name="score4">#EADEC6</color>
+    <color name="score8">#F1AF78</color>
+    <color name="score16">#F49362</color>
+    <color name="score32">#F37B5E</color>
+    <color name="score64">#F45C3D</color>
+    <color name="score128">#EBCC70</color>
+    <color name="score256">#EBCA60</color>
+    <color name="score512">#EAC64F</color>
+    <color name="score1024">#EBC33F</color>
+    <color name="score2048">#ECC02E</color>
+    <color name="scoreOver2048">#716B5E</color>
 </resources>
