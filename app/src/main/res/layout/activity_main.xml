@@ -25,9 +25,11 @@
             android:id="@+id/textoNombreUsuario"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_margin="10dp"
+            android:layout_marginRight="20dp"
             android:textAlignment="center"
-            android:textStyle="italic"/>
+            android:textStyle="italic"
+            android:gravity="center"
+            android:text="@string/texto_nombre_usuario"/>
     </LinearLayout>
 
     <TextView

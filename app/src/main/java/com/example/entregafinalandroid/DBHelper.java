@@ -38,7 +38,7 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void addScore (String game, String name, String score, String time, String timeMode){
+    public void addScore (String game, String name, int score, int time, String timeMode){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put("game", game);
@@ -50,64 +50,65 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public ArrayList<Score> getScores2048 (){
-        ArrayList<Score> puntuaciones2048 = new ArrayList<>();
-        SQLiteDatabase db = this.getWritableDatabase();
+    public ArrayList<Score> getFilteredOrdenedScores (String filtro, String nombre, String ordenacion1, String ordenacion2){
+        ArrayList<Score> puntuaciones = new ArrayList<>();
         Score puntuacionActual;
-        String [] columns = {"_id", "playerName", "score", "time", "timeMode"};
-        String [] selection = {"2048"};
+        String [] selectionArgs = {nombre};
+        String query;
 
-        Cursor cursor = db.query("scores", columns, "game=?", selection, null, null, null);
+        if (ordenacion1.equals("score")){
+            query = "SELECT * FROM scores WHERE " + filtro + "=? ORDER BY " + ordenacion1 + " DESC, " + ordenacion2;
+        } else {
+            query = "SELECT * FROM scores WHERE " + filtro + "=? ORDER BY " + ordenacion1 + ", " + ordenacion2 + " DESC";
+        }
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(query, selectionArgs);
 
         if (cursor.getCount() != 0){
             if (cursor.moveToFirst()){
                 do {
                     puntuacionActual = new Score();
                     puntuacionActual.setId(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
-                    puntuacionActual.setGame("2048");
+                    puntuacionActual.setGame(cursor.getString(cursor.getColumnIndexOrThrow("game")));
                     puntuacionActual.setPlayerName(cursor.getString(cursor.getColumnIndexOrThrow("playerName")));
-                    puntuacionActual.setScore(cursor.getString(cursor.getColumnIndexOrThrow("score")));
-                    puntuacionActual.setTime(cursor.getString(cursor.getColumnIndexOrThrow("time")));
+                    puntuacionActual.setScore(cursor.getInt(cursor.getColumnIndexOrThrow("score")));
+                    puntuacionActual.setTime(cursor.getInt(cursor.getColumnIndexOrThrow("time")));
                     puntuacionActual.setTimeMode(cursor.getString(cursor.getColumnIndexOrThrow("timeMode")));
 
-                    puntuaciones2048.add(puntuacionActual);
+                    puntuaciones.add(puntuacionActual);
                 } while (cursor.moveToNext());
             }
         }
 
         cursor.close();
         db.close();
-        return puntuaciones2048;
+        return puntuaciones;
     }
 
-    public ArrayList<Score> getScoresGiravoltorb (){
-        ArrayList<Score> puntuacionesGiravoltorb = new ArrayList<>();
-        SQLiteDatabase db = this.getWritableDatabase();
-        Score puntuacionActual;
-        String [] columns = {"_id", "playerName", "score", "time", "timeMode"};
-        String [] selection = {"giravoltorb"};
+    // Devuelve solo los nombres de usuario para no traer contraseñas de la base de datos
+    public ArrayList<String> getUsers (){
+        ArrayList<String> usuarios = new ArrayList<>();
+        String usuarioActual;
+        String [] columns = {"playerName"};
+        SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query("scores", columns, "game=?", selection, null, null, null);
+        Cursor cursor = db.query("users", columns, null, null, null, null, null);
 
         if (cursor.getCount() != 0){
             if (cursor.moveToFirst()){
                 do {
-                    puntuacionActual = new Score();
-                    puntuacionActual.setId(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
-                    puntuacionActual.setGame("giravoltorb");
-                    puntuacionActual.setPlayerName(cursor.getString(cursor.getColumnIndexOrThrow("playerName")));
-                    puntuacionActual.setScore(cursor.getString(cursor.getColumnIndexOrThrow("score")));
-                    puntuacionActual.setTime(cursor.getString(cursor.getColumnIndexOrThrow("time")));
-                    puntuacionActual.setTimeMode(cursor.getString(cursor.getColumnIndexOrThrow("timeMode")));
+                    usuarioActual = cursor.getString(cursor.getColumnIndexOrThrow("playerName"));
 
-                    puntuacionesGiravoltorb.add(puntuacionActual);
+                    usuarios.add(usuarioActual);
                 } while (cursor.moveToNext());
             }
         }
 
         cursor.close();
         db.close();
-        return puntuacionesGiravoltorb;
+        return usuarios;
     }
 
     public boolean checkLogIn (String user, String password){

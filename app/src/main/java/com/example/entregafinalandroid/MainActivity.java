@@ -39,39 +39,6 @@ public class MainActivity extends AppCompatActivity {
         db = new DBHelper(this);
     }
 
-    /*
-    public void pasarSegundaPantalla(View view){
-        Intent intent1 = new Intent(this, SecondaryActivity.class);
-        startActivityForResult(intent1, PAGE_CODE);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @org.jspecify.annotations.Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        String texto = "";
-        TextView visualizador = findViewById(R.id.textoVisualizacion);
-
-
-        if (data != null && resultCode == -1) {
-            texto = data.getStringExtra("datosEditText");
-        }
-
-        visualizador.setText(texto);
-    }
-    ------------------------------------------------------------------------------------------------
-    public void volverPantallaPrincipal(View view){
-        Intent intent2 = new Intent(this, MainActivity.class);
-        EditText contenedorTexto = findViewById(R.id.textoEditado);
-        String s = String.valueOf(contenedorTexto.getText());
-
-        intent2.putExtra("datosEditText",s);
-        setResult(RESULT_OK, intent2);
-
-        finish();
-    }
-    */
-
     public void jugar2048 (View view){
         Intent intent = new Intent(this, Game2048Activity.class);
         intent.putExtra(PLAYER_KEY, player);
@@ -81,9 +48,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void jugarGiravoltorb (View view){
         Intent intent = new Intent(this, GameGiravoltorbActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString(PLAYER_KEY, player);
-        startActivity(intent, bundle);
+        intent.putExtra(PLAYER_KEY, player);
+        startActivity(intent);
     }
 
     public void verPuntuaciones (View view){
@@ -107,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
             builder.setPositiveButton("Estoy seguro", (dialog, which) -> {
                 player = null;
                 isLogged = false;
-                textoUsuario.setText("");
+                textoUsuario.setText("Invitado");
                 botonInicioCerrarSesion.setText("Iniciar sesión");
                 dialog.dismiss();
             });
@@ -165,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
                 builder2.setPositiveButton("Crear usuario", (dialog2, which2) -> {
                     EditText texto_nuevo_usuario = dialogView2.findViewById(R.id.edit_nuevo_nombre_usuario_dialog);
                     EditText texto_nueva_contrasena = dialogView2.findViewById(R.id.edit_nueva_contrasena_dialog);
-                    String nuevo_usuario = String.valueOf(texto_nuevo_usuario.getText()), // TODO
+                    String nuevo_usuario = String.valueOf(texto_nuevo_usuario.getText()),
                             nueva_contrasena = String.valueOf(texto_nueva_contrasena.getText());
                     db.addUser(nuevo_usuario, nueva_contrasena);
                     dialog2.dismiss();

@@ -1,12 +1,19 @@
 package com.example.entregafinalandroid;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.GestureDetector;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,14 +28,17 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class Game2048Activity extends AppCompatActivity {
 
-    private int high_score = 2, anterior_maximos = 3;
+    private static int high_score = 2;
+    private int anterior_maximos = 3;
     private int [][] matriz_tablero = new int[4][4], matriz_anterior = new int[4][4];
-    GridLayout pantalla;
-    ImageButton botonAnterior;
-    private String player, timeMode;
-    private final String GAME = "2048";
+    private GridLayout pantalla;
+    private ImageButton botonAnterior;
+    private static String player;
+    private static final String GAME = "2048";
     private final String PLAYER_KEY = "jugador";
-    private DBHelper db;
+    private static DBHelper db;
+    private static Timer timer;
+    private static TextView timerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +51,7 @@ public class Game2048Activity extends AppCompatActivity {
             return insets;
         });
 
+        timerView = findViewById(R.id.time);
         botonAnterior = findViewById(R.id.botonAnterior);
         player = getIntent().getStringExtra(PLAYER_KEY);
 
@@ -203,7 +214,7 @@ public class Game2048Activity extends AppCompatActivity {
 
         continuar = generar_numero();
         if (!continuar){
-            game_over();
+            gameOver(this);
         }
 
         mostrar_tablero();
@@ -294,11 +305,72 @@ public class Game2048Activity extends AppCompatActivity {
     }
 
     public void inicializar_matriz(){
+        AlertDialog.Builder builder;
+        View dialogView;
+
         for (int fila = 0; fila < matriz_tablero.length; fila++) {
             for (int columna = 0; columna < matriz_tablero.length; columna++) {
                 matriz_tablero[fila][columna] = 0;
             }
         }
+
+        builder = new AlertDialog.Builder(this);
+        dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_timer, null);
+        builder.setView(dialogView);
+
+        builder.setTitle("Nuevo juego " + player);
+        builder.setCancelable(false);
+
+        builder.setPositiveButton("Temporizador", (dialog, which) -> {
+            timer = new Timer("temporizador", "2048", this);
+            final Integer[] minutosSeleccionados = new Integer[1];
+            Integer [] posiblesMinutos = {3, 5, 10};
+
+            AlertDialog.Builder builder2 = new AlertDialog.Builder(this);
+            View dialogView2 = LayoutInflater.from(this).inflate(R.layout.dialog_timer_minutes, null);
+            builder2.setView(dialogView2);
+
+            builder2.setCancelable(false);
+
+            builder2.setPositiveButton("Empezar", (dialog2, which2) -> {
+                timer.setMaxTime(minutosSeleccionados[0] *60);
+                new Thread(timer).start();
+
+                dialog2.dismiss();
+            });
+
+            Spinner spinnerTimer = dialogView2.findViewById(R.id.spinner_timer_minutes);
+            ArrayAdapter<Integer> adapterTimer = new ArrayAdapter<>(
+                    this, android.R.layout.simple_spinner_item, posiblesMinutos);
+            adapterTimer.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerTimer.setAdapter(adapterTimer);
+
+            spinnerTimer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    minutosSeleccionados[0] = posiblesMinutos[position];
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                    minutosSeleccionados[0] = posiblesMinutos[0];
+                }
+            });
+
+            dialog.dismiss();
+
+            AlertDialog dialog2 = builder2.create();
+            dialog2.show();
+        });
+
+        builder.setNegativeButton("Cronómetro", (dialog, which) -> {
+            timer = new Timer("cronometro", "2048", this);
+            new Thread(timer).start();
+            dialog.dismiss();
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     public void actualizar_high_score(){
@@ -314,11 +386,46 @@ public class Game2048Activity extends AppCompatActivity {
 
     }
 
-    public void game_over(){ //TODO dialog con resultados
+    public static void gameOver(Activity activity){
+        int tiempo;
+        AlertDialog.Builder builder;
+        View dialogView;
+        TextView score, time, timeMode;
 
+        if (timer.getTimeMode().equals("temporizador")){
+            tiempo = timer.getMaxTime();
+        } else {
+            timer.stop();
+            tiempo = timer.getSeconds();
+        }
 
-        //db.addScore(GAME, player, high_score, time, timeMode);
+        db.addScore(GAME, player, high_score, tiempo, timer.getTimeMode());
+
+        builder = new AlertDialog.Builder(activity);
+        dialogView = LayoutInflater.from(activity).inflate(R.layout.dialog_resultados, null);
+        builder.setView(dialogView);
+
+        score = dialogView.findViewById(R.id.texto_resultados_puntuacion);
+        time = dialogView.findViewById(R.id.texto_resultados_tiempo);
+        timeMode = dialogView.findViewById(R.id.texto_resultados_time_mode);
+
+        score.setText(String.valueOf(high_score));
+        time.setText(tiempo/60 + ":" + tiempo%60);
+        timeMode.setText(timer.getTimeMode());
+
+        builder.setTitle("Resultados");
+        builder.setCancelable(false);
+
+        builder.setPositiveButton("Ok", (dialog, which) -> {
+            dialog.dismiss();
+            activity.finish();
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
     }
+
 
     public void reiniciar(View view){
         inicializar_matriz();
@@ -344,6 +451,10 @@ public class Game2048Activity extends AppCompatActivity {
         } else {
             Toast.makeText(this,"No te quedan backs", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public static void updateTimer(String tiempo){
+        timerView.setText(tiempo);
     }
 
     public void volverPrincipal(View view){

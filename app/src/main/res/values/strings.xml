@@ -13,4 +13,19 @@
     <string name="texto_usuario_contrasena_incorrecto">Usuario o contraseña incorrecta. Vuelve a intentarlo</string>
     <string name="high_score_text">High score: </string>
     <string name="Titulo2048">2048</string>
+    <string name="titulo_scores">Puntuaciones</string>
+    <string name="texto_filtrar">Filtrar por:</string>
+    <string name="texto_ordenar">Ordenar por:</string>
+    <string name="texto_filtrar2">llamado</string>
+    <string name="texto_boton_buscar">Buscar</string>
+    <string name="texto_timer">Selecciona el modo de juego</string>
+    <string name="texto_timer_minutes">Selecciona el número de minutos a jugar</string>
+    <string name="texto_resultados_puntuacion">Puntuación:</string>
+    <string name="texto_resultados_tiempo">Tiempo:</string>
+    <string name="texto_resultados_time_mode">Modo de juego:</string>
+    <string name="text_time">Time:</string>
+    <string name="titulo_giravoltorb">Giravoltorb</string>
+    <string name="text_score">Pantallas superadas:</string>
+    <string name="texto_nombre_usuario">Invitado</string>
+    <string name="texto_siguiente_pantalla">Has superado la pantalla, pasas de nivel</string>
 </resources>
